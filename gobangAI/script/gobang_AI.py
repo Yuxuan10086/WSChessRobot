@@ -1,8 +1,8 @@
+#!/usr/bin/env python3
+
 import rospy
 from geometry_msgs.msg import Point as rosPoint
-from graphics import *
 from math import *
-import numpy as np
 
 class GobangAI():
     def __init__(self):
@@ -225,6 +225,7 @@ class GobangAI():
                 self.list3.append((self.next_point[0], self.next_point[1]))
                 return self.next_point
 
+
 def callback(human_pos, pub, ai):
     ai_pos = ai.play((human_pos.x, human_pos.y))
     pos_pub = rosPoint()
@@ -240,6 +241,7 @@ def callback(human_pos, pub, ai):
         pos_pub.x = ai_pos[0]
         pos_pub.y = ai_pos[1]
         pub.publish(pos_pub)
+
 def main():
     rospy.init_node('gobang_AI', anonymous=True)
     pub = rospy.Publisher('ai', rosPoint, queue_size = 10)

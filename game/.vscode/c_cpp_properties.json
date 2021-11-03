@@ -1,0 +1,19 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/opt/ros/noetic/include/**",
+        "/home/yuxuan/chessRobot/src/game/include/**",
+        "/home/yuxuan/chessRobot/src/gobangAI/include/**",
+        "/home/yuxuan/chessRobot/src/vision/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS"
+    }
+  ],
+  "version": 4
+}
