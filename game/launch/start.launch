@@ -1,0 +1,8 @@
+<launch>
+	<param name="showGridWidth" value="40" />
+    <param name="column" value="15" />
+    <param name="row" value="15" />
+    <node name="game" pkg="game" type="game" />
+    <node name="show" pkg="game" type="show.py" />
+    <node name="gobang_AI" pkg="gobangAI" type="gobang_AI.py" />
+</launch>

@@ -3,13 +3,24 @@
 import rospy
 from geometry_msgs.msg import Point as rosPoint
 from math import *
+import time
 
 class GobangAI():
     def __init__(self):
-        self.GRID_WIDTH = 40
-
-        self.COLUMN = 15
-        self.ROW = 15
+        flag = 1
+        start = time.time()
+        while flag:
+            time.sleep(0.2)
+            try:
+                self.COLUMN = rospy.get_param('column') - 1 # 此处值比game小1  可落子位置为(0, 0)到(column + 1, row + 1)
+                self.ROW = rospy.get_param('row') - 1
+                flag = 0
+            except:
+                if time.time() - start > 5:
+                    self.COLUMN = 15
+                    self.ROW = 15
+                    flag = 0
+                    # raise Exception('等待参数超时')
 
         self.list1 = []  # AI
         self.list2 = []  # human
@@ -228,6 +239,7 @@ class GobangAI():
 
 def callback(human_pos, pub, ai):
     ai_pos = ai.play((human_pos.x, human_pos.y))
+    print(ai_pos)
     pos_pub = rosPoint()
     if ai_pos == 0: # 人类黑子胜利
         pos_pub.x = -1

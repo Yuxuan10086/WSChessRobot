@@ -574,7 +574,7 @@ class _BBox(GraphicsObject):
         self.p1.x = self.p1.x + dx
         self.p1.y = self.p1.y + dy
         self.p2.x = self.p2.x + dx
-        self.p2.y = self.p2.y  + dy
+        self.p2.y = self.p2.y + dy
                 
     def getP1(self): return self.p1.clone()
 
