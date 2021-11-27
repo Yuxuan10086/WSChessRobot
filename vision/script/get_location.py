@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 import os
 import apriltag
+import time
 
 def compare_corner(corner, direction): # 传入四个角点列表与方向 从左上顺时针0123
     sum = [-1]
@@ -36,9 +37,13 @@ def corner_detector(img):
     at_detector = apriltag.Detector(apriltag.DetectorOptions(families='tag36h11') )
     tags = at_detector.detect(gray)
     tags.sort(key = lambda tag : tag.tag_id)
-    print(tags)
+    return [compare_corner(tags[0].corners, 2),
+        compare_corner(tags[1].corners, 3),
+        compare_corner(tags[2].corners, 0),
+        compare_corner(tags[3].corners, 1)]
 
 def order_points(pts): # 传入四点列表 从左上起顺时针
+    pts = np.asarray(pts)
     rect = np.zeros((4, 2), dtype = "float32")
     s = pts.sum(axis = 1)
     rect[0] = pts[np.argmin(s)]
@@ -138,9 +143,12 @@ def get_location(img1, img2):
 
 file_url = os.path.split(os.path.realpath(__file__))[0] + '/test.png'
 test = cv2.imread(file_url)
-corner_detector(test)
-# test = four_point_transform(test, np.array([(61, 251), (309, 114), (376, 259), (81, 408)]))
-# cv2.imshow('test', test)
-# cv2.waitKey(0)
-
-# print(compare_corner([(0, 0), (1, 0), (1, 1), (0, 1)], 4))
+corners = corner_detector(test)
+for corner in corners:
+    corner = (int(corner[0]), int(corner[1]))
+    cv2.circle(test, corner, 5, (255, 0, 0))
+cv2.imshow('test0', test)
+print(corners)
+test = four_point_transform(test, corners)
+cv2.imshow('test', test)
+cv2.waitKey(0)
