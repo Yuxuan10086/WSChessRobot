@@ -2,7 +2,9 @@ import numpy as np
 import cv2
 import os
 import apriltag
-import time
+import rospy
+
+# 手机直拍图像过大，需压缩后方可使用，照片注意拍摄方向
 
 def compare_corner(corner, direction): # 传入四个角点列表与方向 从左上顺时针0123
     sum = [-1]
@@ -35,7 +37,9 @@ def corner_detector(img):
     # 从左上顺时针ID为 0 1 2 3
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     at_detector = apriltag.Detector(apriltag.DetectorOptions(families='tag36h11') )
+    print('a')
     tags = at_detector.detect(gray)
+    print('a')
     tags.sort(key = lambda tag : tag.tag_id)
     return [compare_corner(tags[0].corners, 2),
         compare_corner(tags[1].corners, 3),
@@ -141,14 +145,17 @@ def get_location(img1, img2):
     cv2.waitKey(0)
     return center
 
-file_url = os.path.split(os.path.realpath(__file__))[0] + '/test.png'
+file_url = os.path.split(os.path.realpath(__file__))[0] + '/test10.png'
 test = cv2.imread(file_url)
 corners = corner_detector(test)
 for corner in corners:
     corner = (int(corner[0]), int(corner[1]))
     cv2.circle(test, corner, 5, (255, 0, 0))
-cv2.imshow('test0', test)
+# cv2.imshow('test0', test)
 print(corners)
 test = four_point_transform(test, corners)
-cv2.imshow('test', test)
+cv2.imwrite(os.path.split(os.path.realpath(__file__))[0] + '/test4.jpg', test)
 cv2.waitKey(0)
+
+# def main():
+#     pass
