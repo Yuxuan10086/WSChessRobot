@@ -2,6 +2,9 @@
 	<param name="showGridWidth" value="40" />
     <param name="column" value="15" />
     <param name="row" value="15" />
+    <param name="camera_id" type="int" value="0" />
+    <node name="video_process" pkg="vision" type="video_process.py" />
+    <node name="get_location" pkg="vision" type="getlocation.py" />
     <node name="game" pkg="game" type="game" />
     <node name="show" pkg="game" type="show.py" />
     <node name="gobang_AI" pkg="gobangAI" type="gobang_AI.py" />

@@ -3,6 +3,9 @@ import cv2
 import os
 import apriltag
 import rospy
+import cv_bridge
+from sensor_msgs.msg import Image
+from geometry_msgs.msg import Point
 
 # 手机直拍图像过大，需压缩后方可使用，照片注意拍摄方向
 
@@ -139,23 +142,46 @@ def get_location(img1, img2):
     res, contours = draw_contour(res)
     center = find(contours, res)
     # 测试代码
-    print(center)
-    res[center[0], center[1]] = 255
-    cv2.imshow("res", res)
-    cv2.waitKey(0)
+    # print(center)
+    # cv2.circle(res, center, 5, (255, 0, 0))
+    # cv2.imshow("res", res)
+    # cv2.waitKey(0)
     return center
 
-file_url = os.path.split(os.path.realpath(__file__))[0] + '/test10.png'
-test = cv2.imread(file_url)
-corners = corner_detector(test)
-for corner in corners:
-    corner = (int(corner[0]), int(corner[1]))
-    cv2.circle(test, corner, 5, (255, 0, 0))
-# cv2.imshow('test0', test)
-print(corners)
-test = four_point_transform(test, corners)
-cv2.imwrite(os.path.split(os.path.realpath(__file__))[0] + '/test4.jpg', test)
-cv2.waitKey(0)
+def test():
+    file_url = os.path.split(os.path.realpath(__file__))[0] + '/test0.jpg'
+    test = cv2.imread(file_url)
+    corners = corner_detector(test)
+    for corner in corners:
+        corner = (int(corner[0]), int(corner[1]))
+        cv2.circle(test, corner, 5, (255, 0, 0))
+    # cv2.imshow('test0', test)
+    print(corners)
+    test = four_point_transform(test, corners)
+    cv2.imwrite(os.path.split(os.path.realpath(__file__))[0] + '/test4.jpg', test)
 
-# def main():
-#     pass
+
+beforeImg = 0
+transformer = cv_bridge.CvBridge()
+centerPub = rospy.Publisher("human", Point)
+def beforeCallback(img):
+    global before
+    before = transformer.imgmsg_to_cv2(img)
+def afterCallback(img):
+    after = transformer.imgmsg_to_cv2(img)
+    center = get_location(after, before)
+    centerPoint = Point()
+    centerPoint.x = center[0]
+    centerPoint.y = center[1]
+    centerPub.publish(centerPoint)
+    # 待加入图像坐标与真实坐标转换
+
+def main():
+    rospy.Subscriber("before", Image, beforeCallback)
+    rospy.Subscriber("after", Image, afterCallback)
+    rospy.spin()
+
+if __name__ == '__main__':
+    test()
+
+# 棋子位置识别模块需在棋盘内同时增加一枚黑子和一枚白子时识别黑子的位置

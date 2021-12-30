@@ -1,5 +1,7 @@
 <launch>
-    <include file="$(find vision)/launch/usb_cam-test.launch" />
-    <include file="$(find vision)/launch/continuous_detection.launch" />
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find vision)/config/map.rviz" required="true" />
+    <!-- <include file="$(find vision)/launch/usb_cam-test.launch" /> -->
+    <!-- <include file="$(find vision)/launch/continuous_detection.launch" /> -->
+    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find vision)/config/map.rviz" required="true" /> -->
+    <param name="camera_id" type="int" value="0" />
+    <node name="video_process" pkg="vision" type="video_process.py" />
 </launch>
