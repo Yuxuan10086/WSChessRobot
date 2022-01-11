@@ -7,20 +7,22 @@ import cv2
 import cv_bridge
 
 rospy.init_node('video_process', anonymous=True)
-before = rospy.Publisher('map_image/before', Image, queue_size=1)
-after = rospy.Publisher('map_image/after', Image, queue_size=1)
+before = rospy.Publisher('map_image/before', Image, queue_size=10)
+after = rospy.Publisher('map_image/after', Image, queue_size=10)
 
 cam_id = rospy.get_param('camera_id')
 try:
     cap = cv2.VideoCapture(cam_id)
     cap.release()
 except:
-    raise Exception('摄像头编号错误')
+    rospy.loginfo('摄像头编号错误')
 converter = cv_bridge.CvBridge()
 
 def pubImgCallback(publisher):
     cap = cv2.VideoCapture(cam_id)
     sucess, img = cap.read()
+    # cv2.imshow('test', img)
+    # cv2.waitKey(0)
     img = converter.cv2_to_imgmsg(img, encoding='bgr8')
     publisher.publish(img)
     cap.release()
@@ -37,6 +39,7 @@ def pubImgCallback(publisher):
 #     cap.release()
 #     rate.sleep()
 
+pubImgCallback(before)
 rospy.Subscriber("ai", Point, lambda data : pubImgCallback(before))
 rospy.Subscriber("human_signal", Bool, lambda data : pubImgCallback(after))
 rospy.spin()

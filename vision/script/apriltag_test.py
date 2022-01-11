@@ -1,16 +1,21 @@
 import cv2
 import time
-import os
-ccap = cv2.VideoCapture(0)
-i = 0
-# while 1:
-#     success, img = ccap.read()
-#     # cv2.imshow('f', frame)
-#     # cv2.waitKey(0)
-#     cv2.imwrite(os.path.split(os.path.realpath(__file__))[0] + '/img/test' + str(i) + '.jpg', img)
-#     i += 1
-#     time.sleep(2)
+import cv_bridge
+import rospy
+from sensor_msgs.msg import Image
+from geometry_msgs.msg import Point
 
-success, img = ccap.read()
-time.sleep(1)
-cv2.imwrite(os.path.split(os.path.realpath(__file__))[0] + '/test1.jpg', img)
+# rospy.init_node('test')
+# before = rospy.Publisher('/map_image/before', Image, queue_size=10)
+
+cam_id = 0
+converter = cv_bridge.CvBridge()
+
+cap = cv2.VideoCapture(cam_id)
+sucess, img = cap.read()
+cv2.imshow('test', img)
+cv2.waitKey(0)
+img = converter.cv2_to_imgmsg(img, encoding='bgr8')
+# time.sleep(5)
+# before.publish(img)
+cap.release()

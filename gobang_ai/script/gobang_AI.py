@@ -220,6 +220,7 @@ class GobangAI():
 
     def play(self, pos):
         if pos in self.list3:
+            rospy.loginfo('玩家非法落子')
             raise Exception('玩家非法落子')
         self.list2.append((pos[0], pos[1]))
         self.list3.append((pos[0], pos[1]))
@@ -231,6 +232,7 @@ class GobangAI():
             if self.game_win(self.list1):
                 return 1 # ai白子胜利
             elif self.next_point in self.list3:
+                rospy.loginfo('AI非法落子')
                 raise Exception('AI非法落子')
             else:
                 self.list3.append((self.next_point[0], self.next_point[1]))

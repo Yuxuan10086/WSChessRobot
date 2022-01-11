@@ -10,6 +10,7 @@ column = rospy.get_param('column') - 1
 row = rospy.get_param('row') - 1
 gridWidth = rospy.get_param('showGridWidth')
 
+# niangde这有bug 只能绘制正方形棋盘 长宽不相等的时候就炸了
 
 win = GraphWin('gobang game', gridWidth * column, gridWidth * row)
 win.setBackground('yellow')
